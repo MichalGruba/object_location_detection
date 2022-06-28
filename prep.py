@@ -6,7 +6,8 @@ import random
 IMG_SIZE = 224
 
 
-def getImages(dir_path):
+# gets an array of images
+def get_images(dir_path):
     images = [cv2.imread(item) for i in [glob.glob(str(dir_path) + '/%i.tif' % num) for num in range(200)] for
               item in i]
     images = [cv2.resize(img, (IMG_SIZE, IMG_SIZE)) for img in images]
@@ -14,6 +15,7 @@ def getImages(dir_path):
     return images
 
 
+# normalizes images' pixel values
 def normalize(images):
     temp1 = []
     for i in range(images.__len__()):
@@ -22,13 +24,15 @@ def normalize(images):
     return temp1
 
 
-def shuffleData(images, labels):
+# shuffles the data
+def shuffle_data(images, labels):
     data = list(zip(images, labels))
     random.shuffle(data)
     return data
 
 
-def splitData(data):
+# splits list of tuples (img, label) into two separate lists
+def split_data(data):
     images = []
     labels = []
     for img, label in data:
@@ -39,13 +43,16 @@ def splitData(data):
     return images, labels
 
 
+# prepares a single picture to feed it into the model
 def prepare(filepath):
     img_array = cv2.imread(filepath)
     new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))
     new_array = (new_array / 255.0).astype(np.float32)
     return new_array.reshape(-1, IMG_SIZE, IMG_SIZE, 3)
 
-def resizeImages(images):
+
+# resizes the images
+def resize_images(images):
     ims = []
     for im in images:
         tmp = cv2.resize(im, (IMG_SIZE, IMG_SIZE))
